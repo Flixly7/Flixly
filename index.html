@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flixly</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{
+  background: radial-gradient(circle at top, #111827 0%, #000 60%);
+  color:#fff;
+  padding-top:70px;
+}
+
+.logo-text{
+  font-size:32px;
+  font-weight:600;
+  background:linear-gradient(90deg,#7b61ff,#ff3d3d);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:1px;
+}
+
+#searchInput{
+  padding:8px 14px;
+  font-size:15px;
+  border-radius:8px;
+  border:2px solid #ffb703;
+  color:#fff;
+  background:#111;      /* 🔥 ADD THIS */
+  caret-color:#fff;     /* 🔥 ADD THIS */
+  width:100%;
+}
+
+#searchInput:focus{
+  border-color:#7b61ff;
+  outline:none;
+}
+
+.drawer-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  border-bottom:1px solid #222;
+}
+
+.drawer-logo{
+  font-size:30px;
+  font-weight:bold;
+  color:#7b61ff;
+}
+
+.drawer-close{
+  font-size:22px;
+  cursor:pointer;
+}
+
+header{
+  display:flex;
+  align-items:center;
+  padding:22px 14px;
+  background: rgba(11,11,26,0.85);
+backdrop-filter: blur(8px);
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:9999;
+}
+
+.left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  width:100%;
+}
+
+.search-box{
+  margin-left:auto;
+}
+.menu-btn{
+  font-size:24px;
+  cursor:pointer;
+  z-index:10000;   /* 🔥 ALWAYS CLICKABLE */
+}
+.logo{font-size:24px;font-weight:bold;color:#ff3d3d}
+
+
+@media(max-width:768px){
+
+  #searchInput{
+    width:100%;
+    font-size:12px;
+  }
+
+}
+
+
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:20px;
+  margin:10px 0;
+}
+
+.section-title .icon{
+  font-size:20px;
+}
+
+/* ===== DESKTOP NAV FIX ===== */
+@media(min-width:1024px){
+
+  header{
+    justify-content:space-between;
+  }
+
+  .left{
+    flex:1;
+  }
+
+  .desktop-categories{
+    flex:2;
+    display:flex;
+    justify-content:center;
+    gap:28px;
+  }
+
+  .search-box{
+    flex:1;
+    display:flex;
+    justify-content:flex-end;
+  }
+}
+
+.desktop-categories span{
+  cursor:pointer;
+  padding:6px 10px;
+  border-radius:6px;
+  transition:0.3s;
+}
+
+.desktop-categories span:hover{
+  background:#1f1f1f;
+}
+
+.desktop-categories span.active{
+  background:#7b61ff;
+}
+
+/* ===== SLIDER ===== */
+.slider{
+  position:relative;
+  margin:15px;
+  border-radius:10px;
+  overflow:hidden;
+  height:230px; /* slider height control */
+}
+
+.slide{
+  min-width:100%;
+  height:100%;
+  position:relative;
+}
+
+.slides{
+  display:flex;
+  height:100%;
+  transition:0.6s ease;
+}
+
+.slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* ARROWS */
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,0.3);
+  width:14px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  cursor:pointer;
+  z-index:5;
+}
+
+.arrow.left{ left:10px; }
+.arrow.right{ right:10px; }
+
+/* ===== SLIDE TEXT OVER IMAGE ===== */
+.slide-content{
+  position:absolute;
+  left:20px;
+  bottom:20px;
+  z-index:3;
+  color:#fff;
+  max-width:70%;
+}
+
+.slide-content h3{
+  margin:0;
+  font-size:22px;
+}
+
+.slide-content a{
+  display:inline-block;
+  margin-top:8px;
+  padding:8px 14px;
+  background:#7b61ff;
+  color:#fff;
+  border-radius:6px;
+  text-decoration:none;
+  font-size:14px;
+}
+
+/* DARK GRADIENT FOR TEXT VISIBILITY */
+.slide::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:60%;
+  background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  z-index:2;
+}
+
+/* DOTS BELOW SLIDER */
+.slider-dots{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:10px;
+}
+
+.slider-dots span{
+  width:8px;
+  height:8px;
+  background:#555;
+  border-radius:50%;
+  transition:0.3s;
+}
+
+.slider-dots span.active{
+  width:22px;
+  border-radius:10px;
+  background:#7b61ff;
+}
+
+/* ===== MOBILE SIDE MENU ===== */
+.categories{
+  position:fixed;
+  top:70px;            /* 🔥 HEADER KE NICHE */
+  left:-260px;
+  width:240px;
+  height:100%;
+  background:#0b0b1a;
+  padding-top:10px;
+  transition:0.3s ease;
+  z-index:9000;        /* 🔥 HEADER SE KAM, PAGE SE ZYADA */
+}
+
+.categories.show{
+  left:0;
+}
+
+.categories button{
+  padding:14px;
+  font-size:16px;
+}
+
+/* DESKTOP */
+@media(min-width:1024px){
+  .menu-btn{display:none}
+  .categories{display:none}
+  .desktop-categories{display:flex;gap:23px}
+}
+.categories button{
+display:block;width:100%;padding:10px;
+background:none;border:none;color:#fff;
+text-align:left;border-bottom:1px solid #222;
+cursor:pointer;
+}
+.categories button.active{
+  background:#7b61ff;
+}
+
+/* MOVIES */
+.section{padding:10px}
+.movie-list{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+.movie{
+  background: linear-gradient(145deg, #111, #0a0a0a);
+  border-radius:12px;
+  overflow:hidden;
+  display:block;
+  text-decoration:none;
+  color:#fff;
+  position:relative;
+  transition:0.4s ease;
+  border:1px solid #1f1f1f;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+/* Glow border effect */
+.movie::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  padding:1px;
+  background:linear-gradient(90deg,#7b61ff,#ff3d3d,#7b61ff);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:0;
+  transition:0.3s;
+}
+
+/* Hover effect */
+.movie:hover{
+  transform:translateY(-6px) scale(1.03);
+  box-shadow:0 10px 25px rgba(123,97,255,0.3);
+}
+
+.movie:hover::before{
+  opacity:1;
+}
+.movie img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  transition:0.2s;
+}
+
+.movie:hover img{
+  transform:scale(1.08);
+}
+.movie h3{font-size:16px;text-align:center;margin:6px 0}
+
+
+/* ===== RESPONSIVE MOVIE GRID ===== */
+
+/* Tablet – 3 movies */
+@media (min-width: 768px) {
+  .movie-list{
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .movie img{
+    height:230px;
+  }
+}
+
+/* Desktop – 4 movies */
+@media (min-width: 1024px) {
+  .movie-list{
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .movie img{
+    height:230px;
+  }
+}
+
+/* 🔥 MOBILE FIX – desktop categories hide */
+@media (max-width:1023px){
+  .desktop-categories{
+    display:none !important;
+  }
+}
+
+.movie.show{
+  opacity:0;
+  transform:translateY(10px);
+  animation:fadeIn 0.4s forwards;
+}
+
+@keyframes fadeIn{
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* PAGINATION */
+#pagination,#homePagination{text-align:center;margin:20px}
+#pagination button,#homePagination button{
+padding:8px 12px;margin:4px;
+border:none;border-radius:6px;
+background:#222;color:#fff;cursor:pointer;
+}
+#pagination button.active,#homePagination button.active{background:#8a63ff}
+#pagination button:disabled,#homePagination button:disabled{opacity:.5}
+</style>
+</head>
+
+<body>
+
+<header class="top-header">
+
+  <div class="left">
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <div class="logo-text" onclick="goHome()">Flixly</div>
+
+
+
+  <!-- DESKTOP CATEGORIES -->
+  <nav class="desktop-categories">
+    <span onclick="filterCat('movies',event)">Movies</span>
+    <span onclick="filterCat('web',event)">Web-Series</span>
+    <span onclick="filterCat('ott',event)">OTT</span>
+    <span onclick="filterCat('anime',event)">Anime</span>
+    <span onclick="filterCat('18++',event)">18++</span>
+  </nav>
+  <div class="search-box">
+  <input id="searchInput" placeholder="Search here...">
+</div>
+  </div>
+
+</header>
+
+<!-- ✅ SLIDER (HOME ONLY) -->
+<div class="slider" id="homeSlider">
+   <div class="arrow left" onclick="prevSlide()">❮</div>
+   <div class="arrow right" onclick="nextSlide()">❯</div>
+   <div class="slides" id="slides"></div>
+</div>
+
+<div class="slider-dots" id="sliderDots"></div>
+
+
+
+
+<!-- ✅ HOME PAGE -->
+<div id="homePage">
+<div class="section">
+
+<!-- CATEGORY -->
+<div class="categories" id="catMenu">
+
+  <!-- ❌ CLOSE BUTTON -->
+ <div class="drawer-header">
+  <div class="drawer-logo">Flixly</div>
+  <div class="drawer-close" onclick="toggleMenu()">✕</div>
+</div>
+
+<button onclick="filterCat('movies',event)">Movies</button>
+<button onclick="filterCat('web',event)">Web-Series</button>
+<button onclick="filterCat('ott',event)">OTT</button>
+<button onclick="filterCat('anime',event)">Anime</button>
+<button onclick="filterCat('18++',event)">18++</button>
+</div>
+
+<h3 class="section-title">
+  <span class="icon fire">🔥</span>
+  Latest Releases
+</h3>
+<div class="movie-list" id="homeMovieList"></div>
+<div id="homePagination"></div>
+
+</div>
+</div>
+
+<!-- RESULT PAGE -->
+<div id="resultPage" style="display:none">
+<div class="section">
+<h3 id="sectionTitle"></h3>
+<div id="resultCount" style="color:#aaa;font-size:14px;margin:6px 0"></div>
+<div class="movie-list" id="movieList"></div>
+<div id="pagination"></div>
+<button onclick="renderHome()" style="
+  margin:10px 0;
+  padding:6px 12px;
+  background:#ff3d3d;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;">← Back Home</button>
+</div>
+</div>
+
+<script>
+ const movies = [
+{ name:"Avengers Endgame", 
+cat:"movies", 
+tag:"marvel",
+img:"https://picsum.photos/300/200?101", 
+link:"https://fascinating-gingersnap-0c9621.netlify.app/"},
+
+{ name:"Spider-Man No Way Home", 
+cat:"movies", 
+tag:"marvel", 
+img:"https://picsum.photos/300/200?102", 
+link:"#"},
+
+{ name:"Fast X", cat:"movies", tag:"action", img:"https://picsum.photos/300/200?103", link:"#"},
+{ name:"John Wick 4", cat:"movies", tag:"action", img:"https://picsum.photos/300/200?104", link:"#"},
+{ name:"Thor Love & Thunder", cat:"movies", tag:"marvel", img:"https://picsum.photos/300/200?105", link:"#"},
+{ name:"Black Panther 2", cat:"movies", tag:"marvel", img:"https://picsum.photos/300/200?106", link:"#"},
+{ name:"Doctor Strange 2", cat:"movies", tag:"marvel", img:"https://picsum.photos/300/200?107", link:"#"},
+{ name:"Venom 2", cat:"movies", tag:"action", img:"https://picsum.photos/300/200?108", link:"#"},
+{ name:"Stranger Things S4", cat:"web", tag:"netflix", img:"https://picsum.photos/300/200?109", link:"#"},
+{ name:"Stranger Things S5", cat:"web", tag:"netflix", img:"https://picsum.photos/300/200?110", link:"#"},
+{ name:"Money Heist", cat:"web", tag:"netflix", img:"https://picsum.photos/300/200?111", link:"#"},
+{ name:"The Witcher", cat:"web", tag:"netflix", img:"https://picsum.photos/300/200?112", link:"#"},
+{ name:"The Last of Us", cat:"web", tag:"hbo", img:"https://picsum.photos/300/200?113", link:"#"},
+{ name:"House of the Dragon", cat:"web", tag:"hbo", img:"https://picsum.photos/300/200?114", link:"#"},
+{ name:"Loki", cat:"ott", tag:"marvel", img:"https://picsum.photos/300/200?115", link:"#"},
+{ name:"Moon Knight", cat:"ott", tag:"marvel", img:"https://picsum.photos/300/200?116", link:"#"},
+{ name:"The Boys", cat:"ott", tag:"amazon", img:"https://picsum.photos/300/200?117", link:"#"},
+{ name:"Reacher", cat:"ott", tag:"amazon", img:"https://picsum.photos/300/200?118", link:"#"},
+{ name:"Demon Slayer", cat:"anime", tag:"action", img:"https://picsum.photos/300/200?119", link:"#"},
+{ name:"Attack on Titan", cat:"anime", tag:"action", img:"https://picsum.photos/300/200?120", link:"#"},
+{ name:"Jujutsu Kaisen", cat:"anime", tag:"action", img:"https://picsum.photos/300/200?121", link:"#"},
+{ name:"Naruto Shippuden", cat:"anime", tag:"action", img:"https://picsum.photos/300/200?122", link:"#"},
+{ name:"One Piece", cat:"anime", tag:"action", img:"https://picsum.photos/300/200?123", link:"#"},
+{ name:"Test Adult Movie 1", cat:"18++", tag:"adult", img:"https://picsum.photos/300/200?124", link:"#"},
+{ name:"Test Adult Movie 2", cat:"18++", tag:"adult", img:"https://picsum.photos/300/200?125", link:"#"}
+];
+
+let perPage=16,currentPage=1,activeCat="all";
+const catMenu = document.getElementById("catMenu");
+const homeMovieList=document.getElementById("homeMovieList");
+const movieList=document.getElementById("movieList");
+const homePagination=document.getElementById("homePagination");
+const pagination=document.getElementById("pagination");
+const homePage=document.getElementById("homePage");
+const resultPage=document.getElementById("resultPage");
+const homeSlider=document.getElementById("homeSlider");
+const sectionTitle = document.getElementById("sectionTitle");
+const searchInput=document.getElementById("searchInput");
+const slides=document.getElementById("slides");
+const resultCount = document.getElementById("resultCount");
+const sliderDots = document.getElementById("sliderDots");
+
+/* SLIDER */
+movies.slice(0,10).forEach(m=>{
+slides.innerHTML+=`
+<div class="slide">
+  <img src="${m.img}">
+  <div class="slide-content">
+    <h3>${m.name}</h3>
+    <a href="${m.link}" target="_blank">Download Now</a>
+  </div>
+</div>`;
+});
+
+
+// ✅ Populate dots dynamically
+movies.slice(0,10).forEach((_,i)=>{
+  sliderDots.innerHTML += `<span></span>`;
+});
+
+let slideIndex = 0;
+
+function showSlide(){
+  slides.style.transform = `translateX(-${slideIndex*100}%)`;
+  updateDots();
+}
+
+// Update dots visually
+function updateDots(){
+  const dots = sliderDots.querySelectorAll("span");
+  dots.forEach((dot,i)=>{
+    dot.classList.toggle("active", i === slideIndex);
+  });
+}
+
+// Auto slide every 5s
+setInterval(()=>{
+  slideIndex = (slideIndex + 1) % slides.children.length;
+  showSlide();
+}, 7000);
+
+// Arrow navigation
+function nextSlide(){
+  slideIndex = (slideIndex + 1) % slides.children.length;
+  showSlide();
+}
+function prevSlide(){
+  slideIndex = (slideIndex - 1 + slides.children.length) % slides.children.length;
+  showSlide();
+}
+
+function goHome(){
+  activeCat = "all";
+  currentPage = 1;
+  searchInput.value = "";
+  renderHome();
+}
+
+function filterCat(cat, e){
+  activeCat = cat;
+  currentPage = 1;
+  searchInput.value = "";
+
+  document.querySelectorAll(".categories button")
+    .forEach(b => b.classList.remove("active"));
+
+  document.querySelectorAll(".desktop-categories span")
+    .forEach(s => s.classList.remove("active"));
+
+  if(e) e.target.classList.add("active");
+
+  catMenu.classList.remove("show");
+  render(true);
+}
+
+// Initial display
+showSlide();
+
+/* MENU */
+function toggleMenu(){
+  const arrows = document.querySelectorAll(".arrow");
+
+  if(catMenu.classList.contains("show")){
+    catMenu.classList.remove("show");
+    arrows.forEach(a => a.style.opacity = "1");
+  }else{
+    catMenu.classList.add("show");
+    arrows.forEach(a => a.style.opacity = "0");
+  }
+}
+
+/* HOME RENDER */
+function renderHome(){
+let start=(currentPage-1)*perPage;
+let show=movies.slice(start,start+perPage);
+homeMovieList.innerHTML=show.map(m=>`
+<a href="${m.link}" class="movie show">
+<img src="${m.img}">
+<h3>${m.name}</h3>
+</a>`).join("");
+
+homePage.style.display="block";
+homeSlider.style.display="block";
+sliderDots.style.display="flex";
+resultPage.style.display="none";
+
+resultCount.innerText = "";
+
+let total=Math.ceil(movies.length/perPage);
+homePagination.innerHTML=`
+<button ${currentPage==1?"disabled":""} onclick="currentPage--;renderHome()">Previous</button>
+${[...Array(total)].map((_,i)=>`
+<button class="${currentPage==i+1?"active":""}" onclick="currentPage=${i+1};renderHome()">${i+1}</button>`).join("")}
+<button ${currentPage==total?"disabled":""} onclick="currentPage++;renderHome()">Next</button>`;
+}
+
+/* RESULT RENDER */
+function render(force=false){
+const q=searchInput.value.toLowerCase().trim();
+if(q=="" && activeCat=="all" && !force){renderHome();return;}
+
+let filtered = movies.filter(m => {
+
+  // 🔥 SEARCH MODE → ALL MOVIES
+  if (q !== "") {
+    return m.name.toLowerCase().includes(q) || m.tag.toLowerCase().includes(q);
+}
+
+  // 🔥 CATEGORY MODE
+  return activeCat === "all" || m.cat === activeCat;
+}); 
+
+if(filtered.length === 0){
+
+  homePage.style.display="none";
+  resultPage.style.display="block";
+
+  homeSlider.style.display = "none";
+  sliderDots.style.display = "none";
+  homePagination.innerHTML="";
+
+  resultCount.innerText = "0 results found";
+
+  sectionTitle.innerHTML = `
+    🔍 No results for "<b>${q}</b>"
+  `;
+
+  movieList.innerHTML = `
+    <div style="
+      text-align:center;
+      width:100%;
+      padding:40px 0;
+      font-size:18px;
+      color:#aaa;">
+      😔 No movies matched your search
+    </div>`;
+
+  pagination.innerHTML = "";
+  return;
+}
+ 
+else{
+  resultCount.innerText = `${filtered.length} results found`;
+}
+
+homePage.style.display="none";
+resultPage.style.display="block";
+
+  /* 🔥 SLIDER CONTROL */
+homeSlider.style.display = "none";
+sliderDots.style.display = "none";
+homePagination.innerHTML="";
+
+const catIcons = {
+  all:"🔥",
+  movies:"🎬",
+  web:"📺",
+  ott:"🍿",
+  anime:"🧸",
+  "18++":"🔞"
+};
+
+sectionTitle.innerHTML = q!=""
+ ? ` Related results for "<b>${q}</b>"`
+ : `<span class="icon">${catIcons[activeCat] || "🔥"}</span>
+    Category: ${activeCat.toUpperCase()}`;
+
+let start=(currentPage-1)*perPage;
+let show=filtered.slice(start,start+perPage);
+movieList.innerHTML=show.map(m=>`
+<a href="${m.link}" class="movie">
+<img src="${m.img}">
+<h3>${m.name}</h3>
+</a>`).join("");
+
+let total=Math.ceil(filtered.length/perPage);
+pagination.innerHTML=`
+<button ${currentPage==1?"disabled":""} onclick="currentPage--;render(true)">Previous</button>
+${[...Array(total)].map((_,i)=>`
+<button class="${currentPage==i+1?"active":""}" onclick="currentPage=${i+1};render(true)">${i+1}</button>`).join("")}
+<button ${currentPage==total?"disabled":""} onclick="currentPage++;render(true)">Next</button>`;
+}
+
+/* SEARCH */
+searchInput.onkeydown = e => {
+  if (e.key === "Enter") {
+    activeCat = "all"; // search global
+    currentPage = 1;
+
+    // remove active from all categories
+    document.querySelectorAll(".desktop-categories span")
+  .forEach(s => s.classList.remove("active"));
+    
+
+    render(true); // show result page
+  }
+};
+
+renderHome();
+</script>
+
+</body>
+</html>
